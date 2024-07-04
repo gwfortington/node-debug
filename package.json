@@ -1,0 +1,17 @@
+{
+  "name": "debug",
+  "version": "1.0.0",
+  "description": "Enables debug messaging at varying levels of detail",
+  "author": "Grant Fortington",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.6",
+    "@types/node": "^20.14.9"
+  },
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts"
+}
