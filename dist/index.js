@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,19 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
-const variablePrefixPattern = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$/;
 let debugLevel;
 exports.default = {
-    initialise: (variablePrefix) => __awaiter(void 0, void 0, void 0, function* () {
-        if (variablePrefix && !variablePrefixPattern.test(variablePrefix)) {
-            console.error(`Variable prefix must match pattern "${variablePrefixPattern.source}"`);
-            process.exit(1);
-        }
+    initialise: () => __awaiter(void 0, void 0, void 0, function* () {
         dotenv_1.default.config({ path: `${process.cwd()}/.debug.env` });
-        const packageJSON = (yield Promise.resolve(`${`${process.cwd()}/package.json`}`).then(s => __importStar(require(s)))).default;
-        const variable = `${variablePrefix ? `${variablePrefix}_` : ''}${packageJSON.name.toUpperCase().replace(/-/g, '_')}_DEBUG`;
-        const value = parseInt(process.env[variable] || '');
-        debugLevel = Number.isInteger(value) ? value : 0;
+        const debugLevelValue = parseInt(process.env.DEBUG_LEVEL || '');
+        debugLevel = Number.isInteger(debugLevelValue) ? debugLevelValue : 0;
     }),
     write: (message, level = 1) => {
         if (level <= debugLevel) {
