@@ -44,7 +44,7 @@ exports.default = {
     }),
     write: (message, level = 1) => {
         if (level <= debugLevel) {
-            console.log(`debug-${level}: ${message}`);
+            console.log(`[debug-${level}] ${message}`);
         }
     },
 };
