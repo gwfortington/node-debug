@@ -8,6 +8,9 @@
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.6",
     "@types/node": "^20.14.9"

@@ -31,14 +31,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
+const variablePrefixPattern = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$/;
 let debugLevel;
 exports.default = {
-    initialise: () => __awaiter(void 0, void 0, void 0, function* () {
+    initialise: (variablePrefix) => __awaiter(void 0, void 0, void 0, function* () {
+        if (variablePrefix && !variablePrefixPattern.test(variablePrefix)) {
+            console.error(`Variable prefix must match pattern "${variablePrefixPattern.source}"`);
+            process.exit(1);
+        }
+        dotenv_1.default.config({ path: `${process.cwd()}/.debug.env` });
         const packageJSON = (yield Promise.resolve(`${`${process.cwd()}/package.json`}`).then(s => __importStar(require(s)))).default;
-        const variable = `${packageJSON.name
-            .toUpperCase()
-            .replace(/-/g, '_')}_DEBUG`;
+        const variable = `${variablePrefix ? `${variablePrefix}_` : ''}${packageJSON.name.toUpperCase().replace(/-/g, '_')}_DEBUG`;
         const value = parseInt(process.env[variable] || '');
         debugLevel = Number.isInteger(value) ? value : 0;
     }),
