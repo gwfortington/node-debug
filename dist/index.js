@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-let maximumLevel;
+let debugLevel;
 exports.default = {
     initialise: () => __awaiter(void 0, void 0, void 0, function* () {
         const packageJSON = (yield Promise.resolve(`${`${process.cwd()}/package.json`}`).then(s => __importStar(require(s)))).default;
@@ -40,11 +40,11 @@ exports.default = {
             .toUpperCase()
             .replace(/-/g, '_')}_DEBUG`;
         const value = parseInt(process.env[variable] || '');
-        maximumLevel = Number.isInteger(value) ? value : 0;
+        debugLevel = Number.isInteger(value) ? value : 0;
     }),
     write: (message, level = 1) => {
-        if (level <= maximumLevel) {
-            console.log(`Debug-${level}: ${message}`);
+        if (level <= debugLevel) {
+            console.log(`debug-${level}: ${message}`);
         }
     },
 };
