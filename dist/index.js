@@ -8,21 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv_1 = __importDefault(require("dotenv"));
 let debug;
-let debugLevel;
+let debugLevel = Number.MAX_SAFE_INTEGER;
 exports.default = {
-    initialise: () => __awaiter(void 0, void 0, void 0, function* () {
-        dotenv_1.default.config({ path: `${process.cwd()}/.debug.env` });
-        debug = (process.env.DEBUG || 'false') == 'true';
-        const debugLevelValue = Number(process.env.DEBUG_LEVEL || 'default');
-        debugLevel = isNaN(debugLevelValue)
-            ? Number.MAX_SAFE_INTEGER
-            : debugLevelValue;
+    initialise: (value) => __awaiter(void 0, void 0, void 0, function* () {
+        debug = typeof value !== 'undefined' ? true : false;
+        debugLevel = typeof value == 'number' ? value : Number.MAX_SAFE_INTEGER;
     }),
     write: (message, level = 1) => {
         if (debug && level <= debugLevel) {
