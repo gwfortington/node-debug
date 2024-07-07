@@ -1,7 +1,5 @@
-import dotenv from 'dotenv';
-
 let debug: boolean;
-let debugLevel: number = Number.MAX_SAFE_INTEGER;
+let debugLevel: number;
 
 export default {
   initialise: async (value?: any) => {
