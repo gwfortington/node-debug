@@ -13,15 +13,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
+let debug;
 let debugLevel;
 exports.default = {
     initialise: () => __awaiter(void 0, void 0, void 0, function* () {
         dotenv_1.default.config({ path: `${process.cwd()}/.debug.env` });
+        debug = (process.env.DEBUG || 'false') == 'true';
         const debugLevelValue = parseInt(process.env.DEBUG_LEVEL || '');
-        debugLevel = Number.isInteger(debugLevelValue) ? debugLevelValue : 0;
+        debugLevel = Number.isInteger(debugLevelValue)
+            ? debugLevelValue
+            : Number.MAX_SAFE_INTEGER;
     }),
     write: (message, level = 1) => {
-        if (level <= debugLevel) {
+        if (debug && level <= debugLevel) {
             console.log(`[debug-${level}] ${message}`);
         }
     },
