@@ -19,10 +19,10 @@ exports.default = {
     initialise: () => __awaiter(void 0, void 0, void 0, function* () {
         dotenv_1.default.config({ path: `${process.cwd()}/.debug.env` });
         debug = (process.env.DEBUG || 'false') == 'true';
-        const debugLevelValue = parseInt(process.env.DEBUG_LEVEL || '');
-        debugLevel = Number.isInteger(debugLevelValue)
-            ? debugLevelValue
-            : Number.MAX_SAFE_INTEGER;
+        const _debugLevel = Number(process.env.DEBUG_LEVEL || 'default');
+        debugLevel = isNaN(_debugLevel)
+            ? Number.MAX_SAFE_INTEGER
+            : Math.trunc(_debugLevel);
     }),
     write: (message, level = 1) => {
         if (debug && level <= debugLevel) {
