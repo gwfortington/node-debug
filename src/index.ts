@@ -7,10 +7,10 @@ export default {
   initialise: async () => {
     dotenv.config({ path: `${process.cwd()}/.debug.env` });
     debug = (process.env.DEBUG || 'false') == 'true';
-    const _debugLevel = Number(process.env.DEBUG_LEVEL || 'default');
-    debugLevel = isNaN(_debugLevel)
+    const debugLevelValue = Number(process.env.DEBUG_LEVEL || 'default');
+    debugLevel = isNaN(debugLevelValue)
       ? Number.MAX_SAFE_INTEGER
-      : Math.trunc(_debugLevel);
+      : debugLevelValue;
   },
   write: (message: string, level = 1) => {
     if (debug && level <= debugLevel) {
