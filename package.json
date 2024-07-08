@@ -4,7 +4,7 @@
   "description": "Enables debug messaging at varying levels of detail",
   "author": "Grant Fortington",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },
