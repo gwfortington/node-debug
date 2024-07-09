@@ -9,12 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-let debug;
-let debugLevel;
+let debug = false;
+let debugLevel = Number.MAX_SAFE_INTEGER;
 exports.default = {
-    initialise: (value) => __awaiter(void 0, void 0, void 0, function* () {
-        debug = typeof value !== 'undefined' ? true : false;
-        debugLevel = typeof value == 'number' ? value : Number.MAX_SAFE_INTEGER;
+    initialise: (value = false) => __awaiter(void 0, void 0, void 0, function* () {
+        debug = typeof value !== 'boolean' || value ? true : false;
+        if (debug && typeof value == 'number') {
+            debugLevel = value;
+        }
     }),
     write: (message, level = 1) => {
         if (debug && level <= debugLevel) {
