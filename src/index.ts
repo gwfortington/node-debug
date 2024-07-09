@@ -1,10 +1,12 @@
-let debug: boolean;
-let debugLevel: number;
+let debug: boolean = false;
+let debugLevel: number = Number.MAX_SAFE_INTEGER;
 
 export default {
-  initialise: async (value?: any) => {
-    debug = typeof value !== 'undefined' ? true : false;
-    debugLevel = typeof value == 'number' ? value : Number.MAX_SAFE_INTEGER;
+  initialise: async (value: any = false) => {
+    debug = typeof value !== 'boolean' || value ? true : false;
+    if (debug && typeof value == 'number') {
+      debugLevel = value;
+    }
   },
   write: (message: string, level = 1) => {
     if (debug && level <= debugLevel) {
