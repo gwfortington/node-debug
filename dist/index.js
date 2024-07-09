@@ -13,7 +13,9 @@ let debug = false;
 let debugLevel = Number.MAX_SAFE_INTEGER;
 exports.default = {
     initialise: (value = false) => __awaiter(void 0, void 0, void 0, function* () {
-        debug = typeof value !== 'boolean' || value ? true : false;
+        if (typeof value !== 'boolean' || value == true) {
+            debug = true;
+        }
         if (debug && typeof value == 'number') {
             debugLevel = value;
         }
