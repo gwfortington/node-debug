@@ -16,8 +16,6 @@ class Debug {
     static initialise(value) {
         if (typeof value !== 'boolean' || value == true) {
             Debug.on = true;
-        }
-        if (Debug.on) {
             const groups = /^(\d*):?([01]{0,4})$/.exec(value);
             if (groups) {
                 if (groups[1]) {
