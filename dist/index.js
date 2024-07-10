@@ -1,28 +1,46 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-let debug = false;
-let debugLevel = Number.MAX_SAFE_INTEGER;
-exports.default = {
-    initialise: (value = false) => __awaiter(void 0, void 0, void 0, function* () {
+exports.Debug = exports.MessageType = void 0;
+var MessageType;
+(function (MessageType) {
+    MessageType["Entry"] = "entry";
+    MessageType["Step"] = "step";
+    MessageType["Value"] = "value";
+    MessageType["Exit"] = "exit";
+})(MessageType || (exports.MessageType = MessageType = {}));
+class Debug {
+    constructor(context, level = 1) {
+        this.context = context;
+        this.level = level;
+    }
+    static initialise(value) {
         if (typeof value !== 'boolean' || value == true) {
-            debug = true;
+            Debug.on = true;
         }
-        if (debug && typeof value == 'number') {
-            debugLevel = value;
+        if (Debug.on) {
+            const groups = /^(\d*):?([01]{0,4})$/.exec(value);
+            if (groups) {
+                if (groups[1]) {
+                    Debug.depth = parseInt(groups[1]);
+                }
+                if (groups[2]) {
+                    Debug.messageTypeMask = groups[2].padEnd(4, '0');
+                }
+            }
         }
-    }),
-    write: (message, level = 1) => {
-        if (debug && level <= debugLevel) {
-            console.log(`[debug-${level}] ${message}`);
+    }
+    write(messageType, message) {
+        if (Debug.on &&
+            this.level <= Debug.depth &&
+            Object.values(MessageType)
+                .filter((x, i) => parseInt(Debug.messageTypeMask.charAt(i)))
+                .includes(messageType)) {
+            console.log(`[${this.level}:${this.context}:${messageType}]` +
+                (message ? ` ${message}` : ''));
         }
-    },
-};
+    }
+}
+exports.Debug = Debug;
+Debug.on = false;
+Debug.depth = Number.MAX_SAFE_INTEGER;
+Debug.messageTypeMask = '1111';
