@@ -11,7 +11,7 @@ export class Debug {
   private static messageTypeMask: string = '1111';
 
   constructor(
-    private readonly context: string,
+    private readonly source: string,
     private readonly level: number = 1
   ) {}
 
@@ -39,7 +39,7 @@ export class Debug {
         .includes(messageType)
     ) {
       console.log(
-        `[${this.level}:${this.context}:${messageType}]` +
+        `[${this.level}:${this.source}:${messageType}]` +
           (message ? ` ${message}` : '')
       );
     }

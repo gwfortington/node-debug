@@ -9,8 +9,8 @@ var MessageType;
     MessageType["Exit"] = "exit";
 })(MessageType || (exports.MessageType = MessageType = {}));
 class Debug {
-    constructor(context, level = 1) {
-        this.context = context;
+    constructor(source, level = 1) {
+        this.source = source;
         this.level = level;
     }
     static initialise(value) {
@@ -33,7 +33,7 @@ class Debug {
             Object.values(MessageType)
                 .filter((x, i) => parseInt(Debug.messageTypeMask.charAt(i)))
                 .includes(messageType)) {
-            console.log(`[${this.level}:${this.context}:${messageType}]` +
+            console.log(`[${this.level}:${this.source}:${messageType}]` +
                 (message ? ` ${message}` : ''));
         }
     }
