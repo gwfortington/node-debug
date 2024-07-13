@@ -6,11 +6,11 @@ export declare enum MessageType {
 }
 export declare class Debug {
     private readonly source;
-    private readonly level;
     private static on;
-    private static depth;
+    private static sourcePattern;
     private static messageTypeMask;
-    constructor(source: string, level?: number);
+    constructor(source: string);
     static initialise(value: any): void;
     write(messageType: MessageType, message?: string): void;
+    private static _sourcePattern;
 }

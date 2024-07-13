@@ -7,24 +7,29 @@ export enum MessageType {
 
 export class Debug {
   private static on: boolean = false;
-  private static depth: number = Number.MAX_SAFE_INTEGER;
+  private static sourcePattern: string = '^(.*)$';
   private static messageTypeMask: string = '1111';
 
-  constructor(
-    private readonly source: string,
-    private readonly level: number = 1
-  ) {}
+  constructor(private readonly source: string) {}
 
   public static initialise(value: any) {
-    if (typeof value !== 'boolean' || value == true) {
+    if (
+      !['undefined', 'boolean'].includes(typeof value) ||
+      (typeof value == 'boolean' && value == true)
+    ) {
       Debug.on = true;
-      const groups = /^(\d*):?([01]{0,4})$/.exec(value);
-      if (groups) {
-        if (groups[1]) {
-          Debug.depth = parseInt(groups[1]);
-        }
-        if (groups[2]) {
-          Debug.messageTypeMask = groups[2].padEnd(4, '0');
+      if (typeof value !== 'boolean') {
+        const groups = /^([%,\-.0-9A-Z_a-z]*):?([01]{0,4})$/.exec(value);
+        if (groups) {
+          if (groups[1]) {
+            Debug.sourcePattern = Debug.sourcePattern.replace(
+              '.*',
+              this._sourcePattern(groups[1])
+            );
+          }
+          if (groups[2]) {
+            Debug.messageTypeMask = groups[2].padEnd(4, '0');
+          }
         }
       }
     }
@@ -33,15 +38,27 @@ export class Debug {
   public write(messageType: MessageType, message?: string) {
     if (
       Debug.on &&
-      this.level <= Debug.depth &&
+      RegExp(Debug.sourcePattern).test(this.source) &&
       Object.values(MessageType)
         .filter((x, i) => parseInt(Debug.messageTypeMask.charAt(i)))
         .includes(messageType)
     ) {
       console.log(
-        `[${this.level}:${this.source}:${messageType}]` +
-          (message ? ` ${message}` : '')
+        `[${this.source}:${messageType}]` + (message ? ` ${message}` : '')
       );
     }
+  }
+
+  private static _sourcePattern(filter: string) {
+    return filter
+      .split(',')
+      .map((x) =>
+        x
+          .replace(/\./g, '?')
+          .replace(/_/g, '.')
+          .replace(/%/g, '.*')
+          .replace(/\?/g, '\\.')
+      )
+      .join('|');
   }
 }
