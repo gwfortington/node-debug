@@ -17,12 +17,12 @@ export class Debug {
       !['undefined', 'boolean'].includes(typeof value) ||
       (typeof value == 'boolean' && value == true)
     ) {
-      Debug.#on = true;
+      this.#on = true;
       if (typeof value !== 'boolean') {
         const groups = /^([%,\-.0-9A-Z_a-z]*):?([01]{0,4})$/.exec(value);
         if (groups) {
           if (groups[1]) {
-            Debug.#sourcePattern = Debug.#sourcePattern.replace(
+            this.#sourcePattern = this.#sourcePattern.replace(
               '.*',
               this._sourcePattern(groups[1])
             );

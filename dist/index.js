@@ -27,12 +27,12 @@ class Debug {
     static initialise(value) {
         if (!['undefined', 'boolean'].includes(typeof value) ||
             (typeof value == 'boolean' && value == true)) {
-            __classPrivateFieldSet(_a, _a, true, "f", _Debug_on);
+            __classPrivateFieldSet(this, _a, true, "f", _Debug_on);
             if (typeof value !== 'boolean') {
                 const groups = /^([%,\-.0-9A-Z_a-z]*):?([01]{0,4})$/.exec(value);
                 if (groups) {
                     if (groups[1]) {
-                        __classPrivateFieldSet(_a, _a, __classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern).replace('.*', this._sourcePattern(groups[1])), "f", _Debug_sourcePattern);
+                        __classPrivateFieldSet(this, _a, __classPrivateFieldGet(this, _a, "f", _Debug_sourcePattern).replace('.*', this._sourcePattern(groups[1])), "f", _Debug_sourcePattern);
                     }
                     if (groups[2]) {
                         __classPrivateFieldSet(_a, _a, groups[2].padEnd(4, '0'), "f", _Debug_messageTypeMask);
