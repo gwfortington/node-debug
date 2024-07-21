@@ -5,10 +5,8 @@ export declare enum MessageType {
     Exit = "exit"
 }
 export declare class Debug {
+    #private;
     private readonly source;
-    private static on;
-    private static sourcePattern;
-    private static messageTypeMask;
     constructor(source: string);
     static initialise(value: any): void;
     write(messageType: MessageType, message?: string): void;

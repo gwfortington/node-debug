@@ -6,9 +6,9 @@ export enum MessageType {
 }
 
 export class Debug {
-  private static on: boolean = false;
-  private static sourcePattern: string = '^(.*)$';
-  private static messageTypeMask: string = '1111';
+  static #on: boolean = false;
+  static #sourcePattern: string = '^(.*)$';
+  static #messageTypeMask: string = '1111';
 
   constructor(private readonly source: string) {}
 
@@ -17,18 +17,18 @@ export class Debug {
       !['undefined', 'boolean'].includes(typeof value) ||
       (typeof value == 'boolean' && value == true)
     ) {
-      Debug.on = true;
+      Debug.#on = true;
       if (typeof value !== 'boolean') {
         const groups = /^([%,\-.0-9A-Z_a-z]*):?([01]{0,4})$/.exec(value);
         if (groups) {
           if (groups[1]) {
-            Debug.sourcePattern = Debug.sourcePattern.replace(
+            Debug.#sourcePattern = Debug.#sourcePattern.replace(
               '.*',
               this._sourcePattern(groups[1])
             );
           }
           if (groups[2]) {
-            Debug.messageTypeMask = groups[2].padEnd(4, '0');
+            Debug.#messageTypeMask = groups[2].padEnd(4, '0');
           }
         }
       }
@@ -37,10 +37,10 @@ export class Debug {
 
   public write(messageType: MessageType, message?: string) {
     if (
-      Debug.on &&
-      RegExp(Debug.sourcePattern).test(this.source) &&
+      Debug.#on &&
+      RegExp(Debug.#sourcePattern).test(this.source) &&
       Object.values(MessageType)
-        .filter((x, i) => parseInt(Debug.messageTypeMask.charAt(i)))
+        .filter((x, i) => parseInt(Debug.#messageTypeMask.charAt(i)))
         .includes(messageType)
     ) {
       console.log(
