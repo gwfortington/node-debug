@@ -24,7 +24,7 @@ export class Debug {
           if (groups[1]) {
             this.#sourcePattern = this.#sourcePattern.replace(
               '.*',
-              this.#getSourcePattern(groups[1])
+              this.#getSourcePattern(groups[1]),
             );
           }
           if (groups[2]) {
@@ -44,7 +44,7 @@ export class Debug {
         .includes(messageType)
     ) {
       console.log(
-        `[${this.source}:${messageType}]` + (message ? ` ${message}` : '')
+        `[${this.source}:${messageType}]` + (message ? ` ${message}` : ''),
       );
     }
   }
@@ -57,7 +57,7 @@ export class Debug {
           .replace(/\./g, '?')
           .replace(/_/g, '.')
           .replace(/%/g, '.*')
-          .replace(/\?/g, '\\.')
+          .replace(/\?/g, '\\.'),
       )
       .join('|');
   }
