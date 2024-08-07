@@ -12,7 +12,7 @@ export class Debug {
 
   constructor(private readonly source: string) {}
 
-  public static initialise(value: any) {
+  static initialise(value: any) {
     if (
       !['undefined', 'boolean'].includes(typeof value) ||
       (typeof value == 'boolean' && value == true)
@@ -35,7 +35,7 @@ export class Debug {
     }
   }
 
-  public write(messageType: MessageType, message?: string) {
+  write(messageType: MessageType, message?: string) {
     if (
       Debug.#on &&
       RegExp(Debug.#sourcePattern).test(this.source) &&
