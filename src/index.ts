@@ -24,7 +24,7 @@ export class Debug {
           if (groups[1]) {
             this.#sourcePattern = this.#sourcePattern.replace(
               '.*',
-              this._sourcePattern(groups[1])
+              this.#getSourcePattern(groups[1])
             );
           }
           if (groups[2]) {
@@ -49,7 +49,7 @@ export class Debug {
     }
   }
 
-  private static _sourcePattern(filter: string) {
+  static #getSourcePattern(filter: string) {
     return filter
       .split(',')
       .map((x) =>

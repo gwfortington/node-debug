@@ -10,5 +10,4 @@ export declare class Debug {
     constructor(source: string);
     static initialise(value: any): void;
     write(messageType: MessageType, message?: string): void;
-    private static _sourcePattern;
 }
