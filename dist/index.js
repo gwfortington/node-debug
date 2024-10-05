@@ -46,7 +46,9 @@ class Debug {
             __classPrivateFieldSet(_a, _a, true, "f", _Debug_on);
             if (typeof value == 'string') {
                 const [sourcePattern, messageTypeMask = ''] = value.split(':');
-                __classPrivateFieldSet(_a, _a, __classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern).replace('.*', _a.getSourcePattern(sourcePattern)), "f", _Debug_sourcePattern);
+                if (sourcePattern) {
+                    __classPrivateFieldSet(_a, _a, __classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern).replace('.*', _a.getSourcePattern(sourcePattern)), "f", _Debug_sourcePattern);
+                }
                 __classPrivateFieldSet(_a, _a, messageTypeMask.padEnd(4, '0'), "f", _Debug_messageTypeMask);
             }
         }

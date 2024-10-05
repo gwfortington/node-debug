@@ -35,10 +35,14 @@ export class Debug {
 
       if (typeof value == 'string') {
         const [sourcePattern, messageTypeMask = ''] = value.split(':');
-        Debug.#sourcePattern = Debug.#sourcePattern.replace(
-          '.*',
-          Debug.getSourcePattern(sourcePattern),
-        );
+
+        if (sourcePattern) {
+          Debug.#sourcePattern = Debug.#sourcePattern.replace(
+            '.*',
+            Debug.getSourcePattern(sourcePattern),
+          );
+        }
+
         Debug.#messageTypeMask = messageTypeMask.padEnd(4, '0');
       }
     }
