@@ -12,44 +12,47 @@ export class Debug {
 
   constructor(private readonly source: string) {}
 
-  static initialise(value: any) {
-    if (
-      !['undefined', 'boolean'].includes(typeof value) ||
-      (typeof value == 'boolean' && value == true)
-    ) {
-      this.#on = true;
-      if (typeof value !== 'boolean') {
-        const groups = /^([%,\-.0-9A-Z_a-z]*):?([01]{0,4})$/.exec(value);
-        if (groups) {
-          if (groups[1]) {
-            this.#sourcePattern = this.#sourcePattern.replace(
-              '.*',
-              this.#getSourcePattern(groups[1]),
-            );
-          }
-          if (groups[2]) {
-            Debug.#messageTypeMask = groups[2].padEnd(4, '0');
-          }
-        }
+  /**
+   * Initialize the Debug class to enable debug messaging. If `value` is a
+   * boolean, it enables or disables debug messaging. If `value` is a string, it
+   * specifies a pattern to match the source of the messages and an optional
+   * message type mask.
+   *
+   * The pattern is a comma-separated list of glob patterns. The message type
+   * mask is a four-character string where each character is a 1 or 0, where 1
+   * enables messages of the corresponding type (entry, step, value, exit).
+   *
+   * For example, to enable all messages for sources starting with `foo` and
+   * messages of type `step` and `value`, use `Debug.initialize('foo%:011')`.
+   *
+   * @param value A boolean to enable or disable debug messaging or a string to
+   * specify a pattern to match the source of the messages and an optional
+   * message type mask.
+   */
+  static initialize(value: string | boolean = false) {
+    if (typeof value == 'boolean' ? value : true) {
+      Debug.#on = true;
+
+      if (typeof value == 'string') {
+        const [sourcePattern, messageTypeMask = ''] = value.split(':');
+        Debug.#sourcePattern = Debug.#sourcePattern.replace(
+          '.*',
+          Debug.getSourcePattern(sourcePattern),
+        );
+        Debug.#messageTypeMask = messageTypeMask.padEnd(4, '0');
       }
     }
   }
 
-  write(messageType: MessageType, message?: string) {
-    if (
-      Debug.#on &&
-      RegExp(Debug.#sourcePattern).test(this.source) &&
-      Object.values(MessageType)
-        .filter((x, i) => parseInt(Debug.#messageTypeMask.charAt(i)))
-        .includes(messageType)
-    ) {
-      console.log(
-        `[${this.source}:${messageType}]` + (message ? ` ${message}` : ''),
-      );
-    }
-  }
-
-  static #getSourcePattern(filter: string) {
+  /**
+   * Replace special characters in the given filter string to form a regular
+   * expression pattern that matches the source of the messages.
+   *
+   * @param filter A comma-separated list of glob patterns to match the source
+   * of the messages.
+   * @returns A regular expression pattern that matches the source of the messages.
+   */
+  private static getSourcePattern(filter: string) {
     return filter
       .split(',')
       .map((x) =>
@@ -60,5 +63,45 @@ export class Debug {
           .replace(/\?/g, '\\.'),
       )
       .join('|');
+  }
+
+  /**
+   * Write a debug message to the console if the class is initialized.
+   *
+   * @param messageType The type of the message (entry, step, value, exit).
+   * @param message An optional message to include in the output.
+   */
+  write(messageType: MessageType, message?: string): void {
+    if (
+      Debug.#on &&
+      this.matchesSourcePattern() &&
+      this.matchesMessageType(messageType)
+    ) {
+      console.log(
+        `[${this.source}:${messageType}]` + (message ? ` ${message}` : ''),
+      );
+    }
+  }
+
+  /**
+   * Test if the current source matches the configured source pattern.
+   *
+   * @returns If the source matches the pattern.
+   */
+  private matchesSourcePattern(): boolean {
+    return RegExp(Debug.#sourcePattern).test(this.source);
+  }
+
+  /**
+   * Test if the given message type is enabled by the configured message type
+   * mask.
+   *
+   * @param messageType The message type to test.
+   * @returns If the message type is enabled.
+   */
+  private matchesMessageType(messageType: MessageType): boolean {
+    return Object.values(MessageType)
+      .filter((x, i) => parseInt(Debug.#messageTypeMask.charAt(i)))
+      .includes(messageType);
   }
 }
