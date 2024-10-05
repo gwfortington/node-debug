@@ -28,7 +28,7 @@ class Debug {
      * Initialize the Debug class to enable debug messaging. If `value` is a
      * boolean, it enables or disables debug messaging. If `value` is a string, it
      * specifies a pattern to match the source of the messages and an optional
-     * message type mask.
+     * message type mask (separated by a colon).
      *
      * The pattern is a comma-separated list of glob patterns. The message type
      * mask is a four-character string where each character is a 1 or 0, where 1
@@ -49,7 +49,9 @@ class Debug {
                 if (sourcePattern) {
                     __classPrivateFieldSet(_a, _a, __classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern).replace('.*', _a.getSourcePattern(sourcePattern)), "f", _Debug_sourcePattern);
                 }
-                __classPrivateFieldSet(_a, _a, messageTypeMask.padEnd(4, '0'), "f", _Debug_messageTypeMask);
+                if (messageTypeMask) {
+                    __classPrivateFieldSet(_a, _a, messageTypeMask.padEnd(4, '0'), "f", _Debug_messageTypeMask);
+                }
             }
         }
     }

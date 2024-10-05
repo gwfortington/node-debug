@@ -12,7 +12,7 @@ export declare class Debug {
      * Initialize the Debug class to enable debug messaging. If `value` is a
      * boolean, it enables or disables debug messaging. If `value` is a string, it
      * specifies a pattern to match the source of the messages and an optional
-     * message type mask.
+     * message type mask (separated by a colon).
      *
      * The pattern is a comma-separated list of glob patterns. The message type
      * mask is a four-character string where each character is a 1 or 0, where 1
