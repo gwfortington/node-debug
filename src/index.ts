@@ -51,6 +51,24 @@ export class Debug {
   }
 
   /**
+   * Write a debug message to the console if the class is initialized.
+   *
+   * @param messageType The type of the message (entry, step, value, exit).
+   * @param message An optional message to include in the output.
+   */
+  write(messageType: MessageType, message?: string): void {
+    if (
+      Debug.#on &&
+      this.matchesSourcePattern() &&
+      this.matchesMessageType(messageType)
+    ) {
+      console.log(
+        `[${this.source}:${messageType}]` + (message ? ` ${message}` : ''),
+      );
+    }
+  }
+
+  /**
    * Replace special characters in the given filter string to form a regular
    * expression pattern that matches the source of the messages.
    *
@@ -69,24 +87,6 @@ export class Debug {
           .replace(/\?/g, '\\.'),
       )
       .join('|');
-  }
-
-  /**
-   * Write a debug message to the console if the class is initialized.
-   *
-   * @param messageType The type of the message (entry, step, value, exit).
-   * @param message An optional message to include in the output.
-   */
-  write(messageType: MessageType, message?: string): void {
-    if (
-      Debug.#on &&
-      this.matchesSourcePattern() &&
-      this.matchesMessageType(messageType)
-    ) {
-      console.log(
-        `[${this.source}:${messageType}]` + (message ? ` ${message}` : ''),
-      );
-    }
   }
 
   /**

@@ -27,6 +27,13 @@ export declare class Debug {
      */
     static initialize(value?: string | boolean): void;
     /**
+     * Write a debug message to the console if the class is initialized.
+     *
+     * @param messageType The type of the message (entry, step, value, exit).
+     * @param message An optional message to include in the output.
+     */
+    write(messageType: MessageType, message?: string): void;
+    /**
      * Replace special characters in the given filter string to form a regular
      * expression pattern that matches the source of the messages.
      *
@@ -35,13 +42,6 @@ export declare class Debug {
      * @returns A regular expression pattern that matches the source of the messages.
      */
     private static getSourcePattern;
-    /**
-     * Write a debug message to the console if the class is initialized.
-     *
-     * @param messageType The type of the message (entry, step, value, exit).
-     * @param message An optional message to include in the output.
-     */
-    write(messageType: MessageType, message?: string): void;
     /**
      * Test if the current source matches the configured source pattern.
      *
