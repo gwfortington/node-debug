@@ -15,10 +15,10 @@ export class Debug {
   /**
    * Initialize the Debug class to enable debug messaging. If `value` is a
    * boolean, it enables or disables debug messaging. If `value` is a string, it
-   * specifies a pattern to match the source of the messages and an optional
+   * specifies a filter to match the source of the messages and an optional
    * message type mask (separated by a colon).
    *
-   * The pattern is a comma-separated list of glob patterns. The message type
+   * The filter is a comma-separated list of glob patterns. The message type
    * mask is a four-character string where each character is a 1 or 0, where 1
    * enables messages of the corresponding type (entry, step, value, exit).
    *
@@ -26,7 +26,7 @@ export class Debug {
    * messages of type `step` and `value`, use `Debug.initialize('foo%:011')`.
    *
    * @param value A boolean to enable or disable debug messaging or a string to
-   * specify a pattern to match the source of the messages and an optional
+   * specify a filter to match the source of the messages and an optional
    * message type mask.
    */
   static initialize(value: string | boolean = false) {
@@ -34,12 +34,12 @@ export class Debug {
       Debug.#on = true;
 
       if (typeof value == 'string') {
-        const [sourcePattern, messageTypeMask = ''] = value.split(':');
+        const [sourceFilter, messageTypeMask = ''] = value.split(':');
 
-        if (sourcePattern) {
+        if (sourceFilter) {
           Debug.#sourcePattern = Debug.#sourcePattern.replace(
             '.*',
-            Debug.getSourcePattern(sourcePattern),
+            Debug.getSourcePattern(sourceFilter),
           );
         }
 
@@ -58,7 +58,7 @@ export class Debug {
    * of the messages.
    * @returns A regular expression pattern that matches the source of the messages.
    */
-  private static getSourcePattern(filter: string) {
+  private static getSourcePattern(filter: string): string {
     return filter
       .split(',')
       .map((x) =>

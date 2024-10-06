@@ -27,10 +27,10 @@ class Debug {
     /**
      * Initialize the Debug class to enable debug messaging. If `value` is a
      * boolean, it enables or disables debug messaging. If `value` is a string, it
-     * specifies a pattern to match the source of the messages and an optional
+     * specifies a filter to match the source of the messages and an optional
      * message type mask (separated by a colon).
      *
-     * The pattern is a comma-separated list of glob patterns. The message type
+     * The filter is a comma-separated list of glob patterns. The message type
      * mask is a four-character string where each character is a 1 or 0, where 1
      * enables messages of the corresponding type (entry, step, value, exit).
      *
@@ -38,16 +38,16 @@ class Debug {
      * messages of type `step` and `value`, use `Debug.initialize('foo%:011')`.
      *
      * @param value A boolean to enable or disable debug messaging or a string to
-     * specify a pattern to match the source of the messages and an optional
+     * specify a filter to match the source of the messages and an optional
      * message type mask.
      */
     static initialize(value = false) {
         if (typeof value == 'boolean' ? value : true) {
             __classPrivateFieldSet(_a, _a, true, "f", _Debug_on);
             if (typeof value == 'string') {
-                const [sourcePattern, messageTypeMask = ''] = value.split(':');
-                if (sourcePattern) {
-                    __classPrivateFieldSet(_a, _a, __classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern).replace('.*', _a.getSourcePattern(sourcePattern)), "f", _Debug_sourcePattern);
+                const [sourceFilter, messageTypeMask = ''] = value.split(':');
+                if (sourceFilter) {
+                    __classPrivateFieldSet(_a, _a, __classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern).replace('.*', _a.getSourcePattern(sourceFilter)), "f", _Debug_sourcePattern);
                 }
                 if (messageTypeMask) {
                     __classPrivateFieldSet(_a, _a, messageTypeMask.padEnd(4, '0'), "f", _Debug_messageTypeMask);
