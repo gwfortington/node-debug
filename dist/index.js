@@ -10,7 +10,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _Debug_instances, _a, _Debug_on, _Debug_sourcePattern, _Debug_messageTypeMask, _Debug_getSourcePattern, _Debug_sourceMatchesPattern, _Debug_messageTypeEnabled;
+var _a, _Debug_on, _Debug_sourcePattern, _Debug_messageTypeMask;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Debug = exports.MessageType = void 0;
 var MessageType;
@@ -22,7 +22,6 @@ var MessageType;
 })(MessageType || (exports.MessageType = MessageType = {}));
 class Debug {
     constructor(source) {
-        _Debug_instances.add(this);
         this.source = source;
     }
     /**
@@ -48,7 +47,14 @@ class Debug {
             if (typeof value == 'string') {
                 const [sourceFilter, messageTypeMask = ''] = value.split(':');
                 if (sourceFilter) {
-                    __classPrivateFieldSet(_a, _a, __classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern).replace('.*', __classPrivateFieldGet(_a, _a, "m", _Debug_getSourcePattern).call(_a, sourceFilter)), "f", _Debug_sourcePattern);
+                    __classPrivateFieldSet(_a, _a, __classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern).replace('.*', sourceFilter
+                        .split(',')
+                        .map((x) => x
+                        .replace(/\./g, '?')
+                        .replace(/_/g, '.')
+                        .replace(/%/g, '.*')
+                        .replace(/\?/g, '\\.'))
+                        .join('|')), "f", _Debug_sourcePattern);
                 }
                 if (messageTypeMask) {
                     __classPrivateFieldSet(_a, _a, messageTypeMask.padEnd(4, '0'), "f", _Debug_messageTypeMask);
@@ -64,29 +70,16 @@ class Debug {
      */
     write(messageType, message) {
         if (__classPrivateFieldGet(_a, _a, "f", _Debug_on) &&
-            __classPrivateFieldGet(this, _Debug_instances, "m", _Debug_sourceMatchesPattern).call(this) &&
-            __classPrivateFieldGet(this, _Debug_instances, "m", _Debug_messageTypeEnabled).call(this, messageType)) {
+            RegExp(__classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern)).test(this.source) &&
+            Object.values(MessageType)
+                .filter((x, i) => parseInt(__classPrivateFieldGet(_a, _a, "f", _Debug_messageTypeMask).charAt(i)))
+                .includes(messageType)) {
             console.log(`[${this.source}:${messageType}]` + (message ? ` ${message}` : ''));
         }
     }
 }
 exports.Debug = Debug;
-_a = Debug, _Debug_instances = new WeakSet(), _Debug_getSourcePattern = function _Debug_getSourcePattern(filter) {
-    return filter
-        .split(',')
-        .map((x) => x
-        .replace(/\./g, '?')
-        .replace(/_/g, '.')
-        .replace(/%/g, '.*')
-        .replace(/\?/g, '\\.'))
-        .join('|');
-}, _Debug_sourceMatchesPattern = function _Debug_sourceMatchesPattern() {
-    return RegExp(__classPrivateFieldGet(_a, _a, "f", _Debug_sourcePattern)).test(this.source);
-}, _Debug_messageTypeEnabled = function _Debug_messageTypeEnabled(messageType) {
-    return Object.values(MessageType)
-        .filter((x, i) => parseInt(__classPrivateFieldGet(_a, _a, "f", _Debug_messageTypeMask).charAt(i)))
-        .includes(messageType);
-};
+_a = Debug;
 _Debug_on = { value: false };
 _Debug_sourcePattern = { value: '^(.*)$' };
 _Debug_messageTypeMask = { value: '1111' };
