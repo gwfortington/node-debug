@@ -39,7 +39,16 @@ export class Debug {
         if (sourceFilter) {
           Debug.#sourcePattern = Debug.#sourcePattern.replace(
             '.*',
-            Debug.getSourcePattern(sourceFilter),
+            sourceFilter
+              .split(',')
+              .map((x) =>
+                x
+                  .replace(/\./g, '?')
+                  .replace(/_/g, '.')
+                  .replace(/%/g, '.*')
+                  .replace(/\?/g, '\\.'),
+              )
+              .join('|'),
           );
         }
 
@@ -59,55 +68,14 @@ export class Debug {
   write(messageType: MessageType, message?: string): void {
     if (
       Debug.#on &&
-      this.matchesSourcePattern() &&
-      this.matchesMessageType(messageType)
+      RegExp(Debug.#sourcePattern).test(this.source) &&
+      Object.values(MessageType)
+        .filter((x, i) => parseInt(Debug.#messageTypeMask.charAt(i)))
+        .includes(messageType)
     ) {
       console.log(
         `[${this.source}:${messageType}]` + (message ? ` ${message}` : ''),
       );
     }
-  }
-
-  /**
-   * Replace special characters in the given filter string to form a regular
-   * expression pattern that matches the source of the messages.
-   *
-   * @param filter A comma-separated list of glob patterns to match the source
-   * of the messages.
-   * @returns A regular expression pattern that matches the source of the messages.
-   */
-  private static getSourcePattern(filter: string): string {
-    return filter
-      .split(',')
-      .map((x) =>
-        x
-          .replace(/\./g, '?')
-          .replace(/_/g, '.')
-          .replace(/%/g, '.*')
-          .replace(/\?/g, '\\.'),
-      )
-      .join('|');
-  }
-
-  /**
-   * Test if the current source matches the configured source pattern.
-   *
-   * @returns If the source matches the pattern.
-   */
-  private matchesSourcePattern(): boolean {
-    return RegExp(Debug.#sourcePattern).test(this.source);
-  }
-
-  /**
-   * Test if the given message type is enabled by the configured message type
-   * mask.
-   *
-   * @param messageType The message type to test.
-   * @returns If the message type is enabled.
-   */
-  private matchesMessageType(messageType: MessageType): boolean {
-    return Object.values(MessageType)
-      .filter((x, i) => parseInt(Debug.#messageTypeMask.charAt(i)))
-      .includes(messageType);
   }
 }
